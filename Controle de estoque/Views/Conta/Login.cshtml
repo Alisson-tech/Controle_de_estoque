@@ -1,0 +1,62 @@
+﻿<!-- Especifica o Model e Preenche os Atributos -->
+@model Controle_de_estoque.Models.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="continer">
+    <div class="row">
+        <h3 class="titulo"> Entrar no Sistema</h3>
+    </div>
+    <div class="row">
+        <section id="loginform">
+            <!-- ação, controller, parametro-ação(Link), metodo, Classe     -->
+            @using (Html.BeginForm("Login", "Conta", new { ReturnUrl = ViewBag.ReturnUrl }
+            , FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <!-- Validar Login -->
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <!-- Criar label Usuario -->
+                    @Html.LabelFor(m => m.Usuario, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <!-- Criar textbox Usuario -->
+                        @Html.TextBoxFor(m => m.Usuario, new { @class = "form-control" })
+                        <!-- Valida Usuario -->
+                        @Html.ValidationMessageFor(m => m.Usuario, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- Label Senha -->
+                    @Html.LabelFor(m => m.Senha, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <!-- Texbox da senha -->
+                        @Html.PasswordFor(m => m.Senha, new { @class = "form-control" })
+                        <!-- Valida Senha -->
+                        @Html.ValidationMessageFor(m => m.Senha, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <!-- Checkbox Lembrar me -->
+                        @Html.CheckBoxFor(m => m.LembrarMe)
+                        <!-- Label Lembrar me -->
+                        @Html.LabelFor(m => m.LembrarMe)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <!-- Botão entrar -->
+                        <input type="submit" class="btn btn-success" value="Entrar" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts{
+    <!-- Script Jquery -->
+    @Scripts.Render("~/bundles/jqueryval");
+}
+

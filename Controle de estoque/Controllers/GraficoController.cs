@@ -8,11 +8,13 @@ namespace Controle_de_estoque.Controllers
 {
     public class GraficoController : Controller
     {
-        // GET: Grafoco
+        [Authorize]
         public ActionResult PerdaMes()
         {
             return View();
         }
+
+        [Authorize]
         public ActionResult EntradaSaidaMes()
         {
             return View();
