@@ -83,17 +83,19 @@
                             </ul>
                         </li>
                     </ul>
-                    <!-- Menu Sobre (nome, ação, Controller) -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>@Html.ActionLink("Sobre", "Sobre", "Home")</li>
-                        <li><a href="#">Olá @User.Identity.Name</a></li>
-                        <!-- Sair da Conta (ação, Controller, metodo, define id) -->
-                        @using (Html.BeginForm("LogOff", "Conta", FormMethod.Post,
-                            new { id = "logoffForm" }))
-                        {
+                    <!-- Sair da Conta (ação, Controller, metodo, define id) -->
+                    using (Html.BeginForm("LogOff", "Conta", FormMethod.Post,
+                        new { id = "logoffForm" }))
+                    {
+                        <!-- Menu Sobre (nome, ação, Controller) -->
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>@Html.ActionLink("Sobre", "Sobre", "Home")</li>
+                            <li><a href="#">Olá @User.Identity.Name</a></li>
+
                             <li><a href="javascript:document.getElementById('logoffForm').submit()">Sair</a></li>
-                        }
-                    </ul>
+
+                        </ul>
+                    }
                 }
                 else
                 {
@@ -103,6 +105,7 @@
                     </ul>
                 }
             </div>
+    </div>
     </div>
         <div class="container body-content">
             @RenderBody()
@@ -115,5 +118,5 @@
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
-    </body>
-    </html>
+</body>
+ </html>

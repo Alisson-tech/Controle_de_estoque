@@ -12,6 +12,7 @@ namespace Controle_de_estoque.Controllers
     {
         //[AllowAnonymous] -- Torna o metodo Publico
         [AllowAnonymous]
+        
         public ActionResult Login(string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
@@ -27,8 +28,8 @@ namespace Controle_de_estoque.Controllers
             {
                 return View(login);
             }
+            var achou = UsuarioModel.ValidarUsuario(login.Usuario, login.Senha);
 
-            var achou = (login.Usuario == "SeuPai" && login.Senha == "123");
             //se for valido Redireciona para Funções do site
             if (achou)
             {

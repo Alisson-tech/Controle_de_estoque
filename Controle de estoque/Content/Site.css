@@ -23,12 +23,15 @@ textarea {
     max-width: 280px;
 }
 /* Classe utilizada na pagina de Login*/
-.continer{
+.container-login {
     width: 400px;
-    margin:0 auto;
+    margin: 0 auto;
 }
 /*Utilizada na pagina de Login*/
 .titulo{
     margin-bottom: 30px;
     text-transform: uppercase;
+}
+.invisivel{
+    display: none;
 }
