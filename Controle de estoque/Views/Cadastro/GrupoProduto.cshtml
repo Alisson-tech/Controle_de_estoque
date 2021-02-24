@@ -71,6 +71,7 @@
     </section>
 </div>
 
+@Html.Hidden("id_cadastro")
 <!-- janela de Cadastro do produto -->
 <div id="modal_cadastro" class="form-horizontal invisivel" role="dialog">
     <fieldset>
@@ -104,6 +105,9 @@
     <script>
         function abrir_form(dados) {
 
+            //preencher o campo id_cadastro
+            $("#id_cadastro").val(dados.Id);
+
             //preencher textbox e checkbox
             $('#txt_nome').val(dados.Nome);
             $('#cbx_ativo').prop('checked', dados.Ativo);
@@ -131,6 +135,20 @@
             });
         }
 
+        function criar_linha_grid(dados) {
+            var ret =
+                '<tr data-id=' + dados.Id + '>' +
+                '<td>' + dados.Nome + '</td>' +
+                '<td>' + (dados.Ativo ? "SIM" : "NÃO") + '</td>' +
+                '<td>' +
+                '<a class="btn btn-primary btn_alterar" style=margin-right:3px><i class="glyphicon glyphicon-pencil"></i> Alterar</a>' +
+                '<a class="btn btn-danger btn_excluir"><i class="glyphicon glyphicon-trash"></i> Excluir</a>' +
+                '</td>' +
+                '</tr>';
+
+            return ret;
+        }
+
         //Clique do btn_incluir
         $(document).on('click', '#btn_incluir', function () {
             //chamar a função e preencher todos como vazio
@@ -141,24 +159,96 @@
         $(document).on('click', '.btn_alterar', function () {
             //obter botão
             var btn = $(this),
-                //Obter o id da tag 'tr' mais proxima 
+                //Obter o id da tag 'tr' mais proxima
                 id = btn.closest('tr').attr('data-id'),
                 //ação do controler cadastro, funcao = RecuperarGrupoProduto. (ação, controler)
                 url = '@Url.Action("RecuperarGrupoProduto", "Cadastro")',
                 //param - parametro da funcao RecuperarGrupoProduto
                 param = {'id':id};
-            //executar a ação em metodo post 
+            //executar a ação em metodo post , response = objeto retornado da função
             $.post(url, param, function(response) {
                 if (response) {
                     abrir_form(response);
                 }
             });
         })
-
+        //clique do botao excluir
         $(document).on('click', '.btn_excluir', function () {
-            alert('3')
-        })
+            var btn = $(this),
+            //obter tr mais proxima
+            tr = btn.closest('tr'),
+            //Obter o id da tag 'tr'
+            id = tr.attr('data-id'),
+            //ação do controler cadastro, funcao = ExcluirGrupoProduto. (ação, controler)
+            url = '@Url.Action("ExcluirGrupoProduto", "Cadastro")',
+            //param - parametro da funcao RecuperarGrupoProduto
+            param = { 'id': id };
 
+            //abrir janela confirmando a exclusão
+            bootbox.confirm({
+                message: "Realmente deseja excluir o grupo produto?",
+                buttons: {
+                    confirm: {
+                        label: "Sim",
+                        className:"btn-success"
+                    },
+                    cancel: {
+                        label: "Não",
+                        className:"btn-danger"
+                    }
+                },
+                //função ao excluir
+                callback: function (result) {
+                    if (result) {
+
+                    //executar a ação em metodo post , response = retorno da ação (sim ou não)
+                    $.post(url, param, function(response) {
+                        if (response) {
+                            tr.remove();
+                        }
+                    });
+                    }
+                }
+            })
+        })
+            .on('click', '#btn_confirmar', function() {
+                var btn = $(this),
+
+                url = '@Url.Action("SalvarGrupoProduto", "Cadastro")',
+
+                    //parametros em formato json que vai transformar no objeto GrupoProdutoModel
+                    param = {
+                        Id : $("#id_cadastro").val(),
+                        Nome: $("#txt_nome").val(),
+                        Ativo: $("#cbx_ativo").prop('checked')
+
+                };
+
+                $.post(url, param, function(response) {
+                    if (response) {
+                        //Incluir linha na tabela
+                        if (param.Id == 0) {
+                            //obter tabela
+                            var table = $('#grid_cadastro').find('tbody'),
+                                //criar linha com o objeto retornado
+                                linha = criar_linha_grid(response);
+
+                            table.append(linha);
+
+                        }
+                        else {
+                            //busco a linha tr no grid cadastro de acordo com o id, e depois busco o td dessa linha
+                            var linha = $('#grid_cadastro').find('tr[data-id=' + param.Id + ']').find('td');
+                         
+                            linha
+                                //pego a coluna 0 e adiciono o nome (metodo 'end' permite chamar duas funções de linha)
+                                .eq(0).html(param.Nome).end()
+                                //pego a coluno 1 e preencho com o ativo
+                                .eq(1).html(param.Ativo ? 'SIM' : 'NÃO');
+                        }
+                    }
+                }); 
+            })
     </script>
 }
 

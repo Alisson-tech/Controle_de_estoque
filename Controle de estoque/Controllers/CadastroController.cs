@@ -15,7 +15,7 @@ namespace Controle_de_estoque.Controllers
             new GrupoProdutoModel() {Id=2, Nome= "Mouse", Ativo=false},
             new GrupoProdutoModel() {Id=3, Nome= "Museu", Ativo=true}
         };
-        //[Authorize] -> faz com que o metodo possa ser chamado apenas com aotorização (Login)
+        //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
         [Authorize]
         public ActionResult GrupoProduto()
         {
@@ -30,6 +30,47 @@ namespace Controle_de_estoque.Controllers
             return Json(_listaGrupoProduto.Find(x => x.Id == id));
         }
 
+        [HttpPost]
+        [Authorize]
+        public ActionResult ExcluirGrupoProduto(int id)
+        {
+
+            var ret = false;
+
+            var registroBD = _listaGrupoProduto.Find(x => x.Id == id);
+            if(registroBD != null)
+            {
+                _listaGrupoProduto.Remove(registroBD);
+
+                ret = true;
+            }
+            return Json(ret);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult SalvarGrupoProduto(GrupoProdutoModel model)
+        {
+            //buscar registro
+            var registroBD = _listaGrupoProduto.Find(x => x.Id == model.Id);
+
+            //se o registro não existir adicione
+            if(registroBD==null)
+            {
+                registroBD = model;
+                //obter o valor maximo do id e incrementar 1
+                registroBD.Id = _listaGrupoProduto.Max(x => x.Id) + 1;
+                //adicionar registro
+                _listaGrupoProduto.Add(registroBD);
+            }
+            //se existir altere
+            else
+            {
+                registroBD.Nome = model.Nome;
+                registroBD.Ativo = model.Ativo;
+            }
+            return Json(registroBD);
+        }
 
         [Authorize]
         public ActionResult MarcaProduto()
