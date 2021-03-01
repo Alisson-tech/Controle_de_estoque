@@ -74,36 +74,44 @@
 @Html.Hidden("id_cadastro")
 <!-- janela de Cadastro do produto -->
 <div id="modal_cadastro" class="form-horizontal invisivel" role="dialog">
-    <fieldset>
-        <div class="row">
-            <div class="form-group">
-                <!-- Criar label (id, texto, classe css) -->
-                @Html.Label("txt_nome", "Nome", new { @class = "col-md-3 control-label" })
- 
-                @Html.TextBox("txt_nome", null, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                @Html.Label("cbx_ativo", "Ativo", new { @class = "col-md-3 control-label" })
-                <!-- Criar label (id) -->
-                @Html.CheckBox("cbx_ativo")
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
+    <div id="msg_mensagem_aviso" class="text-danger invisivel"></div>
+        <fieldset>
+            <div class="row">
                 <div class="form-group">
-                    <div class="modal-footer">
-                        <a id="btn_sair" class="btn btn-default" role="button" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Sair</a>
-                        <a id="btn_confirmar" class="btn btn-primary" role="button" data-dismiss="modal"><i class="glyphicon glyphicon-ok"></i> Salvar</a>
+                    <!-- Criar label (id, texto, classe css) -->
+                    @Html.Label("txt_nome", "Nome", new { @class = "col-md-3 control-label" })
+
+                    @Html.TextBox("txt_nome", null, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("cbx_ativo", "Ativo", new { @class = "col-md-3 control-label" })
+                    <!-- Criar label (id) -->
+                    @Html.CheckBox("cbx_ativo")
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="modal-footer">
+                            <a id="btn_sair" class="btn btn-default" role="button" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> Sair</a>
+                            <a id="btn_confirmar" class="btn btn-primary" role="button"><i class="glyphicon glyphicon-ok"></i> Salvar</a>
+                        </div>
+                        <div id="msg_aviso" class="alert alert-warning invisivel">Falta Preencher os Campos a cima</div>
+                        <div id="msg_erro" class="alert alert-danger invisivel">ops, erro</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </fieldset>
-</div>
-<!-- scripsts -->
-@section Scripts{
-    <script>
+        </fieldset>
+    </div>
+    <!-- scripsts -->
+    @section Scripts{
+        <script>
         function abrir_form(dados) {
+            //esconder mensagens
+            $('#msg_mensagem_aviso').empty();
+            $('#msg_aviso').hide();
+            $('#msg_mensagem_aviso').hide();
+            $('#msg_erro').hide();
 
             //preencher o campo id_cadastro
             $("#id_cadastro").val(dados.Id);
@@ -213,7 +221,6 @@
         })
             .on('click', '#btn_confirmar', function() {
                 var btn = $(this),
-
                 url = '@Url.Action("SalvarGrupoProduto", "Cadastro")',
 
                     //parametros em formato json que vai transformar no objeto GrupoProdutoModel
@@ -224,22 +231,26 @@
 
                 };
 
-                $.post(url, param, function(response) {
-                    if (response) {
+                $.post(url, param, function (response) {
+                    //retorno do backend
+                    if (response.Resultado == "OK") {
                         //Incluir linha na tabela
                         if (param.Id == 0) {
+                            param.Id == response.IdSalvo;
                             //obter tabela
                             var table = $('#grid_cadastro').find('tbody'),
                                 //criar linha com o objeto retornado
-                                linha = criar_linha_grid(response);
+                                linha = criar_linha_grid(param);
 
                             table.append(linha);
 
+                            $('#modal_cadastro').parents('.bootbox').modal('hide');
                         }
+
                         else {
                             //busco a linha tr no grid cadastro de acordo com o id, e depois busco o td dessa linha
                             var linha = $('#grid_cadastro').find('tr[data-id=' + param.Id + ']').find('td');
-                         
+
                             linha
                                 //pego a coluna 0 e adiciono o nome (metodo 'end' permite chamar duas funções de linha)
                                 .eq(0).html(param.Nome).end()
@@ -247,9 +258,38 @@
                                 .eq(1).html(param.Ativo ? 'SIM' : 'NÃO');
                         }
                     }
-                }); 
+                    if (response.Resultado == "ERRO") {
+                        $('#msg_aviso').hide();
+                        $('#msg_mensagem_aviso').hide();
+                        //mostrar erro
+                        $('#msg_erro').show();
+                    }
+
+                    if (response.Resultado == "AVISO") {
+
+                        //adcionar mensagem de erro (do backend) ao HTML 
+                        $('#msg_mensagem_aviso').html(formata_msg_aviso(response.Mensagem));
+                        //Mostrar aviso
+                        $('#msg_aviso').show();
+                        //mostrar mensagem
+                        $('#msg_mensagem_aviso').show();
+                        //esconder erro
+                        $('#msg_erro').hide();
+                    }
+                });
             })
-    </script>
-}
+
+            function formata_msg_aviso(mensagens) {
+
+            var ret = '';
+
+            for (var i = 0; i < mensagens.length; i++)
+            {
+                ret += '<li>' + mensagens[i] + '</li>';
+            }
+            return '<ul>' + ret + '</ul>';
+        }
+        </script>
+    }
 
 

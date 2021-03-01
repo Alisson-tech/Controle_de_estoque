@@ -51,25 +51,49 @@ namespace Controle_de_estoque.Controllers
         [Authorize]
         public ActionResult SalvarGrupoProduto(GrupoProdutoModel model)
         {
-            //buscar registro
-            var registroBD = _listaGrupoProduto.Find(x => x.Id == model.Id);
+            var resultado = "OK";
+            var mensagem = new List<string>();
+            var idSalvo = string.Empty;
 
-            //se o registro não existir adicione
-            if(registroBD==null)
+            //erro do Model (required)
+            if (!ModelState.IsValid)
             {
-                registroBD = model;
-                //obter o valor maximo do id e incrementar 1
-                registroBD.Id = _listaGrupoProduto.Max(x => x.Id) + 1;
-                //adicionar registro
-                _listaGrupoProduto.Add(registroBD);
+                resultado = "AVISO";
+                //obter mensagem de erro do model 
+                mensagem = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList();
             }
-            //se existir altere
             else
             {
-                registroBD.Nome = model.Nome;
-                registroBD.Ativo = model.Ativo;
+                try
+                {
+                    //buscar registro
+                    var registroBD = _listaGrupoProduto.Find(x => x.Id == model.Id);
+
+                    //se o registro não existir adicione
+                    if (registroBD == null)
+                    {
+                        registroBD = model;
+                        //obter o valor maximo do id e incrementar 1
+                        registroBD.Id = _listaGrupoProduto.Max(x => x.Id) + 1;
+                        //adicionar registro
+                        _listaGrupoProduto.Add(registroBD);
+                    }
+                    //se existir altere
+                    else
+                    {
+                        registroBD.Nome = model.Nome;
+                        registroBD.Ativo = model.Ativo;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    resultado = "ERRO";
+                }
             }
-            return Json(registroBD);
+            //cria um objeto anonimo e retorna em json
+            return Json(new { Resultado=resultado, Mensagem= mensagem, IdSalvo = idSalvo});
         }
 
         [Authorize]
