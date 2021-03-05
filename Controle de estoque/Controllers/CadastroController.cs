@@ -26,7 +26,7 @@ namespace Controle_de_estoque.Controllers
         [Authorize]
         public ActionResult RecuperarGrupoProduto(int id)
         {
-            //retornar em json o objeto da lista produto, cujo o Id(id do objeto) seja igual o id(parametro)
+            //retornar em json o objeto GrupoProduto
             return Json(GrupoProdutoModel.RecuperarPeloId(id));
         }
 
@@ -57,7 +57,6 @@ namespace Controle_de_estoque.Controllers
                 try
                 {
                     var id = model.Salvar();
-
                     if (id>0)
                     {
                         idSalvo = id.ToString();

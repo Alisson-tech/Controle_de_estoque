@@ -36,7 +36,7 @@ namespace Controle_de_estoque.Models
                     //comando
                     comando.CommandText = "select * from grupo_produto order by Nome;";
 
-
+                    
                     var reader = comando.ExecuteReader();
 
                     while (reader.Read())

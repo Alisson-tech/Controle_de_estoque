@@ -30,7 +30,7 @@ namespace Controle_de_estoque.Models
 
                     //comando
                     comando.CommandText = string.Format("select count(*) from usuario where login='{0}'" +
-                        " and senha='{1}'", login, senha) ;
+                        " and senha='{1}'", login, CriptoHelper.HashMD5(senha)) ;
                     
                     //ExecuteScalar -> retorna a primeira linha do banco
                     //se a resposta for menor que 0 login não autorizado, caso ao contrario login autorizado
