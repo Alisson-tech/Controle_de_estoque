@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -16,9 +17,8 @@ namespace Controle_de_estoque.Models
             //criar objeto conexão
             using (var conexao = new SqlConnection())
             {
-                //dados da conexão
-                conexao.ConnectionString = @"Data Source=DESKTOP-9LK3UQP\SQLEXPRESS ; Initial Catalog= controle-estoque; " +
-                    "User Id=admin; Password =123";
+                //dados da conexão (arquivo webconfig)
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
 
                 //abrir conexão
                 conexao.Open();

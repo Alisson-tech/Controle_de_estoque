@@ -19,7 +19,7 @@ namespace Controle_de_estoque.Controllers
         [Authorize]
         public ActionResult GrupoProduto()
         {
-            return View(_listaGrupoProduto);
+            return View(GrupoProdutoModel.RecuperarLista());
         }
 
         [HttpPost]
@@ -27,24 +27,14 @@ namespace Controle_de_estoque.Controllers
         public ActionResult RecuperarGrupoProduto(int id)
         {
             //retornar em json o objeto da lista produto, cujo o Id(id do objeto) seja igual o id(parametro)
-            return Json(_listaGrupoProduto.Find(x => x.Id == id));
+            return Json(GrupoProdutoModel.RecuperarPeloId(id));
         }
 
         [HttpPost]
         [Authorize]
         public ActionResult ExcluirGrupoProduto(int id)
         {
-
-            var ret = false;
-
-            var registroBD = _listaGrupoProduto.Find(x => x.Id == id);
-            if(registroBD != null)
-            {
-                _listaGrupoProduto.Remove(registroBD);
-
-                ret = true;
-            }
-            return Json(ret);
+            return Json(GrupoProdutoModel.ExcluirPeloId(id));
         }
 
         [HttpPost]
@@ -66,25 +56,16 @@ namespace Controle_de_estoque.Controllers
             {
                 try
                 {
-                    //buscar registro
-                    var registroBD = _listaGrupoProduto.Find(x => x.Id == model.Id);
+                    var id = model.Salvar();
 
-                    //se o registro não existir adicione
-                    if (registroBD == null)
+                    if (id>0)
                     {
-                        registroBD = model;
-                        //obter o valor maximo do id e incrementar 1
-                        registroBD.Id = _listaGrupoProduto.Max(x => x.Id) + 1;
-                        //adicionar registro
-                        _listaGrupoProduto.Add(registroBD);
+                        idSalvo = id.ToString();
                     }
-                    //se existir altere
                     else
                     {
-                        registroBD.Nome = model.Nome;
-                        registroBD.Ativo = model.Ativo;
+                        resultado = "ERRO";
                     }
-
                 }
                 catch (Exception ex)
                 {

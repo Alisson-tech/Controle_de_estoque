@@ -236,7 +236,7 @@
                     if (response.Resultado == "OK") {
                         //Incluir linha na tabela
                         if (param.Id == 0) {
-                            param.Id == response.IdSalvo;
+                            param.Id = response.IdSalvo;
                             //obter tabela
                             var table = $('#grid_cadastro').find('tbody'),
                                 //criar linha com o objeto retornado
@@ -244,7 +244,6 @@
 
                             table.append(linha);
 
-                            $('#modal_cadastro').parents('.bootbox').modal('hide');
                         }
 
                         else {
@@ -257,6 +256,7 @@
                                 //pego a coluno 1 e preencho com o ativo
                                 .eq(1).html(param.Ativo ? 'SIM' : 'NÃO');
                         }
+                        $('#modal_cadastro').parents('.bootbox').modal('hide');
                     }
                     if (response.Resultado == "ERRO") {
                         $('#msg_aviso').hide();
