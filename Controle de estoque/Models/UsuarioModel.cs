@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -29,8 +30,10 @@ namespace Controle_de_estoque.Models
                     comando.Connection = conexao;
 
                     //comando
-                    comando.CommandText = string.Format("select count(*) from usuario where login='{0}'" +
-                        " and senha='{1}'", login, CriptoHelper.HashMD5(senha)) ;
+                    comando.CommandText = "select count(*) from usuario where login=@login and senha=@senha";
+
+                    comando.Parameters.Add("@login", SqlDbType.VarChar).Value = login;
+                    comando.Parameters.Add("@senha", SqlDbType.VarChar).Value = CriptoHelper.HashMD5(senha);
                     
                     //ExecuteScalar -> retorna a primeira linha do banco
                     //se a resposta for menor que 0 login não autorizado, caso ao contrario login autorizado
