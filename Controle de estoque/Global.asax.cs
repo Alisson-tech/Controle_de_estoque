@@ -17,5 +17,21 @@ namespace Controle_de_estoque
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+        //exibir erro retornado pelo ASP NET (ataque xss )
+        void Application_Error(object sender, EventArgs e)
+        {
+            //pega o objeto do erro
+            Exception ex = Server.GetLastError();
+
+            if (ex is HttpRequestValidationException)
+            {
+                Response.Clear();
+                Response.StatusCode = 200;
+                Response.ContentType = "application/json";
+                //retorna em json
+                Response.Write("{ \"Resultado\":\"AVISO\",\"Mensagens\":[\"Somente texto sem caracteres especiais pode ser enviado.\"],\"IdSalvo\":\"\"}");
+                Response.End();
+            }
+        }
     }
 }

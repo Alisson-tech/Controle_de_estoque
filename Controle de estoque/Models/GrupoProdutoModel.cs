@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Controle_de_estoque.Models
 {
@@ -148,6 +149,8 @@ namespace Controle_de_estoque.Models
 
                         //comando
                         comando.CommandText = "Insert into grupo_produto (nome,ativo) values (@nome, @ativo); select convert(int, scope_identity());";
+                        
+                        //parametros para impedir sql injection
                         comando.Parameters.Add("@nome", SqlDbType.VarChar).Value = this.Nome;
                         comando.Parameters.Add("@ativo", SqlDbType.Bit).Value = (this.Ativo ? 1 : 0);
 
