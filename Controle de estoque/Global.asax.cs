@@ -32,6 +32,12 @@ namespace Controle_de_estoque
                 Response.Write("{ \"Resultado\":\"AVISO\",\"Mensagens\":[\"Somente texto sem caracteres especiais pode ser enviado.\"],\"IdSalvo\":\"\"}");
                 Response.End();
             }
+            if (ex is HttpAntiForgeryException)
+            {
+                Response.Clear();
+                Response.StatusCode = 200;
+                Response.End();
+            }
         }
     }
 }

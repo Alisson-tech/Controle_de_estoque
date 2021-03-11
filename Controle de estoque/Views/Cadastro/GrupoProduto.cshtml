@@ -76,6 +76,8 @@
 <div id="modal_cadastro" class="form-horizontal invisivel" role="dialog">
     <div id="msg_mensagem_aviso" class="text-danger invisivel"></div>
         <fieldset>
+            <!-- Gera um Token de acesso em cookie -->>
+            @Html.AntiForgeryToken()
             <div class="row">
                 <div class="form-group">
                     <!-- Criar label (id, texto, classe css) -->
@@ -106,6 +108,14 @@
     <!-- scripsts -->
     @section Scripts{
         <script>
+            //Função para obter Token
+            function add_anti_forgery_token(data) {
+
+                //obtem o valor do Token
+                data.__RequestVerificationToken = $('[name=__RequestVerificationToken').val();
+                return data;
+            }
+
         function abrir_form(dados) {
             //esconder mensagens
             $('#msg_mensagem_aviso').empty();
@@ -174,7 +184,7 @@
                 //param - parametro da funcao RecuperarGrupoProduto
                 param = {'id':id};
             //executar a ação em metodo post , response = objeto retornado da função
-            $.post(url, param, function(response) {
+            $.post(url, add_anti_forgery_token(param), function(response) {
                 if (response) {
                     abrir_form(response);
                 }
@@ -210,7 +220,7 @@
                     if (result) {
 
                     //executar a ação em metodo post , response = retorno da ação (sim ou não)
-                    $.post(url, param, function(response) {
+                        $.post(url, add_anti_forgery_token(param), function(response) {
                         if (response) {
                             tr.remove();
                         }
@@ -231,7 +241,7 @@
 
                 };
 
-                $.post(url, param, function (response) {
+                $.post(url, add_anti_forgery_token(param), function (response) {
                     //retorno do backend
                     if (response.Resultado == "OK") {
                         //Incluir linha na tabela
