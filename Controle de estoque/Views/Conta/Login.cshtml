@@ -4,11 +4,11 @@
     ViewBag.Title = "Login";
 }
 
-<div class="container-login">
+<div class="container-login d-flex align-items-center">
     <div class="row">
         <h3 class="titulo"> Entrar no Sistema</h3>
     </div>
-    <div class="row">
+    <div class="row ">
         <section id="loginform">
             <!-- ação, controller, parametro-ação(Link), metodo, Classe     -->
             @using (Html.BeginForm("Login", "Conta", new { ReturnUrl = ViewBag.ReturnUrl }

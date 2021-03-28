@@ -31,9 +31,9 @@ namespace Controle_de_estoque.Controllers
             var achou = UsuarioModel.ValidarUsuario(login.Usuario, login.Senha);
 
             //se for valido Redireciona para Funções do site
-            if (achou)
+            if (achou!=null)
             {
-                FormsAuthentication.SetAuthCookie(login.Usuario, login.LembrarMe);
+                FormsAuthentication.SetAuthCookie(achou.Nome, login.LembrarMe);
 
                 if (Url.IsLocalUrl(ReturnUrl))
                 {
