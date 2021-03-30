@@ -9,27 +9,40 @@ namespace Controle_de_estoque.Controllers
 {
     public class CadastroController : Controller
     {
+        private const int _QtdMaxLinhas=5;
+
         #region Grupo Produtos
         //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
         [Authorize]
         public ActionResult GrupoProduto()
         {
-            var lista = GrupoProdutoModel.RecuperarLista();
-
-            ViewBag.QtdMaxLinhas = 5;
+            ViewBag.QtdMaxLinhas = _QtdMaxLinhas;
             ViewBag.PaginaAtual = 1;
 
-            var difQtdPag = ((lista.Count() % ViewBag.QtdMaxLinhas) > 0 ? 1 : 0);
+            var lista = GrupoProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _QtdMaxLinhas);
+            var quant = GrupoProdutoModel.RecuperarQuant();
 
-            ViewBag.QtdPaginas = (lista.Count() / ViewBag.QtdMaxLinhas) + difQtdPag;
+
+            var difQtdPag = ((quant % ViewBag.QtdMaxLinhas) > 0 ? 1 : 0);
+
+            ViewBag.QtdPaginas = (quant / ViewBag.QtdMaxLinhas) + difQtdPag;
 
             return View(lista);
+        }
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public JsonResult GrupoProdutoPagina(int pagina)
+        {
+            var lista = GrupoProdutoModel.RecuperarLista(pagina, _QtdMaxLinhas);
+
+            return Json(lista);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult RecuperarGrupoProduto(int id)
+        public JsonResult RecuperarGrupoProduto(int id)
         {
             //retornar em json o objeto GrupoProduto
             return Json(GrupoProdutoModel.RecuperarPeloId(id));
@@ -38,7 +51,7 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult ExcluirGrupoProduto(int id)
+        public JsonResult ExcluirGrupoProduto(int id)
         {
             return Json(GrupoProdutoModel.ExcluirPeloId(id));
         }
@@ -46,7 +59,7 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult SalvarGrupoProduto(GrupoProdutoModel model)
+        public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
         {
             var resultado = "OK";
             var mensagem = new List<string>();

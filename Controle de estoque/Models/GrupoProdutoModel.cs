@@ -17,7 +17,36 @@ namespace Controle_de_estoque.Models
         public string Nome { get; set; }
         public bool Ativo { get; set; }
 
-        public static List<GrupoProdutoModel> RecuperarLista()
+        public static int RecuperarQuant()
+        {
+            var ret = 0;
+
+            //criar objeto conexão
+            using (var conexao = new SqlConnection())
+            {
+                //dados da conexão
+                conexao.ConnectionString = ConfigurationManager.ConnectionStrings["principal"].ConnectionString;
+
+                //abrir conexão
+                conexao.Open();
+
+                using (var comando = new SqlCommand())
+                {
+
+                    //conectar comando com a conexao no banco
+                    comando.Connection = conexao;
+
+                    //comando
+                    comando.CommandText = "select count(*) from grupo_produto";
+
+
+                    ret = (int)comando.ExecuteScalar();
+                }
+            }
+            return ret;
+        }
+
+        public static List<GrupoProdutoModel> RecuperarLista(int pag, int tamPag)
         {
             var ret = new List<GrupoProdutoModel>();
 
@@ -32,13 +61,18 @@ namespace Controle_de_estoque.Models
 
                 using (var comando = new SqlCommand())
                 {
+                    var pos = (pag-1) * tamPag;
+
                     //conectar comando com a conexao no banco
                     comando.Connection = conexao;
 
                     //comando
-                    comando.CommandText = "select * from grupo_produto order by Nome;";
+                    comando.CommandText = "select * from grupo_produto order by Nome " +
+                        "offset @pos rows fetch next @pag rows only;";
 
-                    
+                    comando.Parameters.Add("@pos", SqlDbType.Int).Value = pos>0?pos-1:0;
+                    comando.Parameters.Add("@pag", SqlDbType.Int).Value = tamPag;
+
                     var reader = comando.ExecuteReader();
 
                     while (reader.Read())
