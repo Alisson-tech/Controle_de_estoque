@@ -66,7 +66,9 @@ namespace Controle_de_estoque.Models
                     //conectar comando com a conexao no banco
                     comando.Connection = conexao;
 
-                    //comando
+                    //comando]
+                    //offset = apartir de qual registro devo retornar
+                    //rows fetch next  = quantos registros devo retornar
                     comando.CommandText = "select * from grupo_produto order by Nome " +
                         "offset @pos rows fetch next @pag rows only;";
 

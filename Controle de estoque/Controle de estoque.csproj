@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CadastroController.cs" />
+    <Compile Include="Controllers\Cadastro\CadGrupoProdutoController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\GraficoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -136,10 +137,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-select.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Cadastro\GrupoProduto.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -149,9 +153,12 @@
     <Content Include="Scripts\bootbox.locales.js" />
     <Content Include="Scripts\bootbox.locales.min.js" />
     <Content Include="Scripts\bootbox.min.js" />
+    <Content Include="Scripts\bootstrap-select.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\Cadastro\GrupoProduto.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -175,7 +182,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Sobre.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Cadastro\GrupoProduto.cshtml" />
+    <Content Include="Views\CadGrupoProduto\index.cshtml" />
     <Content Include="Views\Cadastro\MarcaProduto.cshtml" />
     <Content Include="Views\Cadastro\LocalProduto.cshtml" />
     <Content Include="Views\Cadastro\UnidadeMedida.cshtml" />
@@ -195,6 +202,7 @@
     <Content Include="Views\Relatorio\PosicaoEstoque.cshtml" />
     <Content Include="Views\Relatorio\Ressuprimento.cshtml" />
     <Content Include="Views\Conta\Login.cshtml" />
+    <Content Include="Views\Shared\_Cadastro.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
