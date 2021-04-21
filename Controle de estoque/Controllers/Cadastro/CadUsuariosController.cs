@@ -2,28 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
-namespace Controle_de_estoque.Controllers
+namespace Controle_de_estoque.Controllers.Cadastro
 {
-    public class CadGrupoProdutoController : Controller
+    public class CadUsuariosController : Controller
     {
-        //Limitar quantidade de registro em uma pagina
-        private const int _QtdMaxLinhas=5;
+        private const int _QtdMaxLinhas = 5;
+        private const string _senha = "{$a7#8%51f{8?";
 
         //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
         [Authorize]
-
-        //quando inicia a pagina
         public ActionResult Index()
         {
+            ViewBag.SenhaPadrao = _senha;
+
             ViewBag.ListaTamPag = new SelectList(new int[] { _QtdMaxLinhas, 10, 15, 20 }, _QtdMaxLinhas);
             ViewBag.QtdMaxLinhas = _QtdMaxLinhas;
             ViewBag.PaginaAtual = 1;
 
-            var lista = GrupoProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _QtdMaxLinhas);
-            var quant = GrupoProdutoModel.RecuperarQuant();
+            var lista = UsuarioModel.RecuperarLista(ViewBag.PaginaAtual, _QtdMaxLinhas);
+            var quant = UsuarioModel.RecuperarQuant();
 
 
             var difQtdPag = ((quant % ViewBag.QtdMaxLinhas) > 0 ? 1 : 0);
@@ -35,9 +34,9 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult GrupoProdutoPagina(int pagina, int tamPag)
+        public JsonResult UsuarioPagina(int pagina, int tamPag)
         {
-            var lista = GrupoProdutoModel.RecuperarLista(pagina, tamPag);
+            var lista = UsuarioModel.RecuperarLista(pagina, tamPag);
 
             return Json(lista);
         }
@@ -45,24 +44,24 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult RecuperarGrupoProduto(int id)
+        public ActionResult RecuperarUsuario(int id)
         {
             //retornar em json o objeto GrupoProduto
-            return Json(GrupoProdutoModel.RecuperarPeloId(id));
+            return Json(UsuarioModel.RecuperarPeloId(id));
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult ExcluirGrupoProduto(int id)
+        public ActionResult ExcluirUsuario(int id)
         {
-            return Json(GrupoProdutoModel.ExcluirPeloId(id));
+            return Json(UsuarioModel.ExcluirPeloId(id));
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
+        public ActionResult SalvarUsuario(UsuarioModel model)
         {
             var resultado = "OK";
             var mensagem = new List<string>();
@@ -79,8 +78,12 @@ namespace Controle_de_estoque.Controllers
             {
                 try
                 {
+                    if (model.Senha == _senha)
+                    {
+                        model.Senha = "";
+                    }
                     var id = model.Salvar();
-                    if (id>0)
+                    if (id > 0)
                     {
                         idSalvo = id.ToString();
                     }
@@ -96,8 +99,7 @@ namespace Controle_de_estoque.Controllers
                 }
             }
             //cria um objeto anonimo e retorna em json
-            return Json(new { Resultado=resultado, Mensagem= mensagem, IdSalvo = idSalvo});
+            return Json(new { Resultado = resultado, Mensagem = mensagem, IdSalvo = idSalvo });
         }
-
     }
 }

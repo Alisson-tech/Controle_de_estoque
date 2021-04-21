@@ -5,12 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Controle_de_estoque.Controllers
+namespace Controle_de_estoque.Controllers.Cadastro
 {
-    public class CadGrupoProdutoController : Controller
+    public class CadUnidadeMedidaController : Controller
     {
         //Limitar quantidade de registro em uma pagina
-        private const int _QtdMaxLinhas=5;
+        private const int _QtdMaxLinhas = 5;
 
         //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
         [Authorize]
@@ -22,8 +22,8 @@ namespace Controle_de_estoque.Controllers
             ViewBag.QtdMaxLinhas = _QtdMaxLinhas;
             ViewBag.PaginaAtual = 1;
 
-            var lista = GrupoProdutoModel.RecuperarLista(ViewBag.PaginaAtual, _QtdMaxLinhas);
-            var quant = GrupoProdutoModel.RecuperarQuant();
+            var lista = UnidadeMedidaModel.RecuperarLista(ViewBag.PaginaAtual, _QtdMaxLinhas);
+            var quant = UnidadeMedidaModel.RecuperarQuant();
 
 
             var difQtdPag = ((quant % ViewBag.QtdMaxLinhas) > 0 ? 1 : 0);
@@ -35,9 +35,9 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult GrupoProdutoPagina(int pagina, int tamPag)
+        public JsonResult UnidadeMedidaPagina(int pagina, int tamPag)
         {
-            var lista = GrupoProdutoModel.RecuperarLista(pagina, tamPag);
+            var lista = UnidadeMedidaModel.RecuperarLista(pagina, tamPag);
 
             return Json(lista);
         }
@@ -45,24 +45,24 @@ namespace Controle_de_estoque.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult RecuperarGrupoProduto(int id)
+        public JsonResult RecuperarUnidadeMedida(int id)
         {
             //retornar em json o objeto GrupoProduto
-            return Json(GrupoProdutoModel.RecuperarPeloId(id));
+            return Json(UnidadeMedidaModel.RecuperarPeloId(id));
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult ExcluirGrupoProduto(int id)
+        public JsonResult ExcluirUnidadeMedida(int id)
         {
-            return Json(GrupoProdutoModel.ExcluirPeloId(id));
+            return Json(UnidadeMedidaModel.ExcluirPeloId(id));
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
+        public JsonResult SalvarUnidadeMedida(UnidadeMedidaModel model)
         {
             var resultado = "OK";
             var mensagem = new List<string>();
@@ -80,7 +80,7 @@ namespace Controle_de_estoque.Controllers
                 try
                 {
                     var id = model.Salvar();
-                    if (id>0)
+                    if (id > 0)
                     {
                         idSalvo = id.ToString();
                     }
@@ -96,8 +96,7 @@ namespace Controle_de_estoque.Controllers
                 }
             }
             //cria um objeto anonimo e retorna em json
-            return Json(new { Resultado=resultado, Mensagem= mensagem, IdSalvo = idSalvo});
+            return Json(new { Resultado = resultado, Mensagem = mensagem, IdSalvo = idSalvo });
         }
-
     }
 }
