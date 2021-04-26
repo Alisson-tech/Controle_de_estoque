@@ -33,7 +33,19 @@ namespace Controle_de_estoque.Controllers
             //se for valido Redireciona para Funções do site
             if (achou!=null)
             {
-                FormsAuthentication.SetAuthCookie(achou.Nome, login.LembrarMe);
+                ///FormsAuthentication.SetAuthCookie(achou.Nome, login.LembrarMe);
+                
+                ///criar ticket de validação do usuario
+               var ticket = FormsAuthentication.Encrypt(new FormsAuthenticationTicket(
+                    1, achou.Nome, DateTime.Now, DateTime.Now.AddHours(12),
+                    login.LembrarMe, "Operador"
+                    ));
+
+                //criar o cookie de validação com as informações do ticket
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, ticket);
+
+                //adicionar cookie ao navegador
+                Response.Cookies.Add(cookie);
 
                 if (Url.IsLocalUrl(ReturnUrl))
                 {

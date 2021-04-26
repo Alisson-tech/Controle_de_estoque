@@ -7,13 +7,13 @@ using System.Web.Mvc;
 
 namespace Controle_de_estoque.Controllers
 {
+    //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
+    [Authorize(Roles ="Gerente, Administrativo, Operador")]
     public class CadGrupoProdutoController : Controller
     {
         //Limitar quantidade de registro em uma pagina
         private const int _QtdMaxLinhas=5;
 
-        //[Authorize] -> faz com que o metodo possa ser chamado apenas com autorização (Login)
-        [Authorize]
 
         //quando inicia a pagina
         public ActionResult Index()
@@ -33,7 +33,6 @@ namespace Controle_de_estoque.Controllers
             return View(lista);
         }
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public JsonResult GrupoProdutoPagina(int pagina, int tamPag)
         {
@@ -43,7 +42,6 @@ namespace Controle_de_estoque.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public JsonResult RecuperarGrupoProduto(int id)
         {
@@ -52,15 +50,14 @@ namespace Controle_de_estoque.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Gerente, Administrativo")]
         public JsonResult ExcluirGrupoProduto(int id)
         {
             return Json(GrupoProdutoModel.ExcluirPeloId(id));
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public JsonResult SalvarGrupoProduto(GrupoProdutoModel model)
         {
